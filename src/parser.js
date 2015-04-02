@@ -21,7 +21,7 @@ templateStartingWithJavascript = javascriptBlock, [ (templateHTMLPart) ];
 htmlBlock = { interpolationBlock | htmlTextBlock };
 htmlTextBlock = (htmlTextBlockBit), { (htmlTextBlockBit) };
 (htmlTextBlockBit) = otherText | escapedToken;
-javascriptBlock = (javascriptBlockBit), { (javascriptBlockBit) };
+javascriptBlock = { (javascriptBlockBit) };
 (javascriptBlockBit) = javascriptSourceBlock | anonymousTemplateBlock;
 javascriptSourceBlock = (javascriptSourceBlockBit), { (javascriptSourceBlockBit) };
 (javascriptSourceBlockBit) = otherText | escapedToken;
@@ -60,11 +60,11 @@ function parse( templateFileContents, options, callback ) {
 	};
 
 	tokenizer.onFlush = function parseTokens() {
-		if( ! options.startWith || options.startWith == 'javascript' ) {
-			callback( null, parseStartingWithJavascript( tokens, options ) );
-		}
-		else if( options.startWith == 'html' ) {
+		if( ! options.startWith || options.startWith == 'html' ) {
 			callback( null, parseStartingWithHTML( tokens, options ) );
+		}
+		else if( options.startWith == 'javascript' ) {
+			callback( null, parseStartingWithJavascript( tokens, options ) );
 		}
 	};
 
@@ -125,10 +125,11 @@ function expectTemplateHTMLPart( tokens ) {
 // (javascriptSourceBlockBit) = otherText | escapedToken;
 
 function expectJavascriptBlock( tokens ) {
-	return productionWithNameOrNull( 'javascriptBlock', expect.sequence([
-		expectJavascriptBlockBit,
-		expect.repetition( expectJavascriptBlockBit )
-	]), tokens );
+	// return productionWithNameOrNull( 'javascriptBlock', expect.sequence([
+	// 	expectJavascriptBlockBit,
+	// 	expect.repetition( expectJavascriptBlockBit )
+	// ]), tokens );
+	return productionWithNameOrNull( 'javascriptBlock', expect.repetition( expectJavascriptBlockBit ), tokens );
 }
 
 function expectJavascriptBlockBit( tokens ) {
