@@ -2,6 +2,10 @@
   "name": "jayaech",
   "version": "0.0.1",
   "description": "Static HTML Generation via Minimal Glue between HTML and JS.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joedski/jayaech.git"
+  },
   "main": "src/index.js",
   "directories": {
     "example": "examples"
