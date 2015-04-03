@@ -37,11 +37,11 @@ var modulePreamble = [
 ].join( '\n' );
 var modulePostamble = '';
 
-var interpolationPreamble = "        write( function(){ return ";
-var interpolationPostamble = " }() );";
+var interpolationPreamble = "        write( ";
+var interpolationPostamble = " );";
 
 var htmlTextBlockPreamble = "        write( \"";
-var htmlTextBlockPostamble = "\");";
+var htmlTextBlockPostamble = "\" );";
 
 function makeStringSafeForSourceString( string ) {
 	return string

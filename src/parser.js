@@ -45,12 +45,7 @@ var tokenizer = new Tokenizer({
 	// onFlush: function() { this.onToken = function() {}; }
 });
 
-function parse( templateFileContents, options, callback ) {
-	if( typeof options == 'function' ) {
-		callback = options;
-		options = {};
-	}
-
+function parse( templateFileContents, options ) {
 	options = options || {};
 
 	var tokens = [];
@@ -59,20 +54,13 @@ function parse( templateFileContents, options, callback ) {
 		tokens.push( token );
 	};
 
-	tokenizer.onFlush = function parseTokens() {
-		if( ! options.startWith || options.startWith == 'html' ) {
-			callback( null, parseStartingWithHTML( tokens, options ) );
-		}
-		else if( options.startWith == 'javascript' ) {
-			callback( null, parseStartingWithJavascript( tokens, options ) );
-		}
-	};
+	tokenizer.tokenize( templateFileContents, true );
 
-	try {
-		tokenizer.tokenize( templateFileContents, true );
+	if( ! options.startWith || options.startWith == 'html' ) {
+		return parseStartingWithHTML( tokens, options );
 	}
-	catch( error ) {
-		callback( error );
+	else if( options.startWith == 'javascript' ) {
+		return parseStartingWithJavascript( tokens, options );
 	}
 }
 

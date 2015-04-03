@@ -2,15 +2,8 @@
 
 exports.compile = compile;
 
-function compile( templateProduction, callback ) {
-	try {
-		var templateProduct = compileTemplate( templateProduction );
-
-		callback( null, templateProduct );
-	}
-	catch( error ) {
-		callback( error );
-	}
+function compile( templateProduction ) {
+	return compileTemplate( templateProduction );
 }
 
 function compileTemplate( templateProduction ) {
