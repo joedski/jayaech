@@ -1,0 +1,7 @@
+<ul>
+{# $json( './json-example-data' ).map(
+	@@@
+	<li>{# $index + 1 #}: {# $item.text || "no text here!" #}</li>
+	@@@
+) #}
+</ul>

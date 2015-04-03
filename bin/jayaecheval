@@ -1,0 +1,27 @@
+#!/usr/local/bin/node
+// Evaluates a template.
+
+var jayaech = require( '../lib' );
+require( '../lib/register' );
+
+var templateName = process.argv[ 2 ];
+
+if( ! templateName ) {
+	console.log( "Usage: jayaecheval <template name>" );
+	process.exit( 0 );
+}
+
+var template = jayaech.loadTemplate( templateName );
+var output = template();
+process.stdout.write( output );
+
+// var functionSource = compileFileToFunction
+
+// if( ! /^\//.test( templateName ) ) { 
+// 	templateName = './' + templateName;
+// }
+
+// // Any errors should emit as normal.
+// var template = require( templateName );
+// var output = template();
+// process.stdout.write( output );

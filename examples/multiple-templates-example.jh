@@ -1,0 +1,3 @@
+<ul>
+{# $json( './json-example-data' ).map( $template( './multiple-templates-example-item' ) ) #}
+</ul>

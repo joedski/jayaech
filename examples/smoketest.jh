@@ -1,0 +1,1 @@
+<p>This is a simple smoke test.  It contains no JS/interpolation, so should emit HTML as is.<p>

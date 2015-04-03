@@ -26,7 +26,7 @@ Templates have two main contexts, HTML and Javascript.  Templates, like in PHP, 
 
 Values are interpolated into HTML using the interpolation symbol `{# #}`, preferably with some sort of value in there, such as a string, `{# "beep" #}`, a number, `{# 42 #}`, or most commonly a variable, `{# foo.text #}`.  The value may be any valid Javascript expression (*not _Javascript statement_*), so function calls are allowed and encouraged.
 
-Anonymous Templates are indicated by a block surrounded by `@@@`s.  An anonymous template is compiled into another template right inside its parent, although it uses its parent's `$template` and `$json` functions since it's in the same file context as its parent.  However, it has its own values for `$item`, `$index`, and `$iterable`.  See below under *Environment* on an explanation of these `$` prefixed thingies.
+Anonymous Templates are indicated by a block surrounded by `@@@`s.  An anonymous template is compiled into another template right inside its parent, although it uses its parent's `$template` and `$json` functions since it's in the same file context as its parent.  However, it has its own values for `$item`, `$index`, and `$iterable`.  See below under *Environment* on an explanation of these `$`-prefixed thingies.
 
 #### Escaping Tokens
 
@@ -47,18 +47,11 @@ Each template has an Environment with certain values pre-defined.
 
 - `$template` loads another template by its node-style/commonJS module path.  Usually, this will be relative to the current template.
 - `$json` loads and parses a JSON file, returning the value of it.  Values can be stored in a variable or used directly.
-- `$item` refers to the item or context that the template is being applied to.  Properties of `$item` can be referred to directly by name instead of just as properties thereof.
+- `$item` refers to the item or context that the template is being applied to.  This is the only way to access the values being passed into the template.
 - `$index` is the current index if the template is being used in `Array#map`.
 - `$iterable` is the current array or other iterable object if the template is being used in `Array#map`.
 
 `$index` and `$iterable` are both undefined if the template is not being used in `Array#map` or another similar iteration function.
-
-Note: Don't pass in values which have these names, or you'll overwrite them in the template, and won't be able to access them.
-
-```js
-// This overwrites the normal value of $index within the template.
-console.log( someTemplate({ $index: "oh no!  I overwrote $index!" }) );
-```
 
 
 
@@ -80,17 +73,33 @@ Where the template is small, an Anonymous Template is likely to be used.  Suppos
 
 We can iterate over that like so, using `$json` to load the value of the JSON file, and `Array#map` to map those values over a template.
 
-Note how the property `text` is referred to directly, rather than through `$item.text`.
+Note how the property `text` is referred to as `$item.text`, rather than being referred to directly.
 
 ```
 <ul>
 {# $json( './foo-items' ).map(
 	@@@
-	<li>{# $index #}: {# text #}</li>
+	<li>{# $index #}: {# $item.text #}</li>
 	@@@
 ) #}
 </ul>
 ```
+
+Evaluating the above results in the following:
+
+```html
+<ul>
+	
+	<li>0: foo</li>
+
+	<li>1: bar</li>
+
+	<li>2: baz</li>
+
+</ul>
+```
+
+The extra spaces are from the extra white space between the `@@@`s.
 
 To show that using an Anonymous Template in this fashion is identical to using a separate template, we can simply place the contents of that Anonymous Template into another file, say `foo-item-template.jh`, then load it using `$template`.
 
@@ -103,8 +112,24 @@ To show that using an Anonymous Template in this fashion is identical to using a
 
 ```
 <!-- foo-item-template.jh -->
-<li>{# $index #}: {# text #}</li>
+<li>{# $index #}: {# $item.text #}</li>
 ```
+
+Evaluating the main template above will result in the following:
+
+```html
+<!-- main template file -->
+<ul>
+<!-- foo-item-template.jh -->
+<li>0: foo</li>
+<!-- foo-item-template.jh -->
+<li>1: bar</li>
+<!-- foo-item-template.jh -->
+<li>2: baz</li>
+</ul>
+```
+
+Yes, the comments would be duplicated if included.
 
 
 

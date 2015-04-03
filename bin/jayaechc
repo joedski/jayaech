@@ -1,0 +1,13 @@
+#!/usr/local/bin/node
+// Compiles a file, writing the resultant module-compatible JS to STDOUT.
+
+var jayaech = require( '../lib/index' );
+
+var fileName = process.argv[ 2 ];
+
+if( ! fileName ) {
+	console.log( "Usage: jayaechc <template file>" );
+	process.exit( 0 );
+}
+
+process.stdout.write( jayaech.compileFile( fileName ) );
