@@ -138,7 +138,9 @@ API
 
 To use JayAech programmatically, add it to your package's dependencies and load it using `require( 'jayaech' )`.  This presents a few methods:
 
+- `loadTemplate` loads a file with `compileFileToFunction` and returns it with `$template` and `$json` functions defined to allow loading of other templates and JSON files relative to that template.
 - `compileFile` loads a file (synchronously) and parses it into module source.
+- `compileFileToFunction` loads a file (synchronously) and parses it into function source.
 - `compileToFunctionSource` *(Subject to change)* compiles a template in the form of a string into a function value.  You can pass this to `eval` and assign it to variable.  It doesn't define `$template` or `$json`, however.
 - `compileToModuleSource` compiles a template handed to it in the form of a string into a function value.  You can pass this to `module._compile` if you want to create a proper nodey module.
 
