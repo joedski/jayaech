@@ -1,8 +1,28 @@
 #!/usr/local/bin/node
 // Evaluates a template.
 
+var assert = require( 'assert' ).ok;
+var path = require( 'path' );
+var Module = require( 'module' );
+
 var jayaech = require( '../lib' );
 require( '../lib/register' );
+
+function loadTemplate( templatePath ) {
+	var normalizedPath = path.normalize( templatePath );
+
+	assert( normalizedPath, 'template path must be non-empty after normalization' );
+
+	// path.isAbsolute is not in node v0.10...
+	// if( ! path.isAbsolute( normalizedPath ) ) {
+	if( ! /^\//.test( normalizedPath ) ) {
+		// path.join normalizes after joining?
+		// normalizedPath = path.join( '.', normalizedPath );
+		normalizedPath = './' + normalizedPath;
+	}
+
+	return Module._load( normalizedPath );
+}
 
 var templateName = process.argv[ 2 ];
 
@@ -11,17 +31,6 @@ if( ! templateName ) {
 	process.exit( 0 );
 }
 
-var template = jayaech.loadTemplate( templateName );
+var template = loadTemplate( templateName );
 var output = template();
 process.stdout.write( output );
-
-// var functionSource = compileFileToFunction
-
-// if( ! /^\//.test( templateName ) ) { 
-// 	templateName = './' + templateName;
-// }
-
-// // Any errors should emit as normal.
-// var template = require( templateName );
-// var output = template();
-// process.stdout.write( output );
